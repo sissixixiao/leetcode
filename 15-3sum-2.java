@@ -11,9 +11,13 @@ class Solution {
             // two sum for the last two
             while (lo < hi) {
                 if (nums[i] + nums[lo] + nums[hi] == 0) {
-                    result.add(Arrays.asList(nums[i], nums[lo++], nums[hi--]));
-                    while (lo < hi && nums[lo] == nums[lo - 1]) lo++;
-                    while (lo < hi && nums[hi] == nums[hi + 1]) hi--;
+                    List<Integer> list = new LinkedList<>();
+                    list.add(nums[i]);
+                    list.add(nums[lo]);
+                    list.add(nums[hi]);
+                    result.add(list);
+                    while (lo < hi && nums[lo] == list.get(1)) lo++;
+                    while (lo < hi && nums[hi] == list.get(2)) hi--;
                 } else if (nums[i] + nums[lo] + nums[hi] < 0) lo++;
                 else hi--;
             }
