@@ -14,31 +14,27 @@
  * }
  */
 class Solution {
-    int preorderIndex;
-    Map<Integer, Integer> inorderIndexMap;
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-        preorderIndex = 0;
-        // build a hashmap to store value -> its index relations
-        inorderIndexMap = new HashMap<>();
-        for (int i = 0; i < inorder.length; i++) {
-            inorderIndexMap.put(inorder[i], i);
+        Map<Integer, Integer> inMap = new HashMap<Integer, Integer>();
+
+        for(int i = 0; i < inorder.length; i++) {
+            inMap.put(inorder[i], i);
         }
 
-        return arrayToTree(preorder, 0, preorder.length - 1);
+        TreeNode root = buildTree(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1, inMap);
+        return root;
     }
 
-    private TreeNode arrayToTree(int[] preorder, int left, int right) {
-        // if there are no elements to construct the tree
-        if (left > right) return null;
+    public TreeNode buildTree(int[] preorder, int preStart, int preEnd, int[] inorder, int inStart, int inEnd, Map<Integer, Integer> inMap) {
+        if(preStart > preEnd || inStart > inEnd) return null;
 
-        // select the preorder_index element as the root and increment it
-        int rootValue = preorder[preorderIndex++];
-        TreeNode root = new TreeNode(rootValue);
+        TreeNode root = new TreeNode(preorder[preStart]);
+        int inRoot = inMap.get(root.val);
+        int numsLeft = inRoot - inStart;
 
-        // build left and right subtree
-        // excluding inorderIndexMap[rootValue] element because it's the root
-        root.left = arrayToTree(preorder, left, inorderIndexMap.get(rootValue) - 1);
-        root.right = arrayToTree(preorder, inorderIndexMap.get(rootValue) + 1, right);
+        root.left = buildTree(preorder, preStart + 1, preStart + numsLeft, inorder, inStart, inRoot - 1, inMap);
+        root.right = buildTree(preorder, preStart + numsLeft + 1, preEnd, inorder, inRoot + 1, inEnd, inMap);
+
         return root;
     }
 }

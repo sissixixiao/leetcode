@@ -14,43 +14,19 @@
  * }
  */
 class Solution {
-  int post_idx;
-  int[] postorder;
-  int[] inorder;
-  HashMap<Integer, Integer> idx_map = new HashMap<Integer, Integer>();
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        if (inorder == null || postorder == null || inorder.length != postorder.length) return null;
+        HashMap<Integer, Integer> hm = new HashMap<Integer,Integer>();
+        for (int i=0;i<inorder.length;++i) hm.put(inorder[i], i);
+        return buildTreePostIn(inorder, 0, inorder.length-1, postorder, 0, postorder.length-1,hm);
+    }
 
-  public TreeNode helper(int in_left, int in_right) {
-    // if there is no elements to construct subtrees
-    if (in_left > in_right)
-      return null;
-
-    // pick up post_idx element as a root
-    int root_val = postorder[post_idx];
-    TreeNode root = new TreeNode(root_val);
-
-    // root splits inorder list
-    // into left and right subtrees
-    int index = idx_map.get(root_val);
-
-    // recursion 
-    post_idx--;
-    // build right subtree
-    root.right = helper(index + 1, in_right);
-    // build left subtree
-    root.left = helper(in_left, index - 1);
-    return root;
-  }
-
-  public TreeNode buildTree(int[] inorder, int[] postorder) {
-    this.postorder = postorder;
-    this.inorder = inorder;
-    // start from the last postorder element
-    post_idx = postorder.length - 1;
-
-    // build a hashmap value -> its index
-    int idx = 0;
-    for (Integer val : inorder)
-      idx_map.put(val, idx++);
-    return helper(0, inorder.length - 1);
-  }
+    private TreeNode buildTreePostIn(int[] inorder, int is, int ie, int[] postorder, int ps, int pe, HashMap<Integer,Integer> hm){
+        if (ps>pe || is>ie) return null;
+        TreeNode root = new TreeNode(postorder[pe]);
+        int ri = hm.get(postorder[pe]);
+        root.left = buildTreePostIn(inorder, is, ri-1, postorder, ps, ps+ri-is-1, hm);
+        root.right = buildTreePostIn(inorder,ri+1, ie, postorder, ps+ri-is, pe-1, hm);
+        return root;
+    }
 }
