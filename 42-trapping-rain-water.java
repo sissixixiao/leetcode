@@ -1,22 +1,29 @@
 class Solution {
     public int trap(int[] height) {
+        if (height == null || height.length <= 1) return 0;
         int n = height.length;
-        int lo = 0, hi = n - 1;
-        int leftMax = 0, rightMax = 0;
-        int water = 0;
+        int lo = 0;
+        int hi = n - 1;
+        int lmax = 0;
+        int rmax = 0;
+        int result = 0;
         while (lo < hi) {
-            // update
-            if (height[lo] > leftMax)  leftMax = height[lo];
-            if (height[hi] > rightMax) rightMax = height[hi];
-            // compute
-            if (leftMax < rightMax) { // consider the min
-                water += (leftMax - height[lo]); // leftMax >= height[lo]
-                ++lo;
+            if (height[lo] <= height[hi]) {
+                if (lmax > height[lo]) {
+                    result += lmax - height[lo];
+                } else {
+                    lmax = height[lo];
+                }
+                lo++;
             } else {
-                water += (rightMax - height[hi]);
-                --hi;
+                if (rmax > height[hi]) {
+                    result += rmax - height[hi];
+                } else {
+                    rmax = height[hi];
+                }
+                hi--;
             }
         }
-        return water;
+        return result;
     }
 }

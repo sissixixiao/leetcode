@@ -14,17 +14,8 @@
  * }
  */
 class Solution {
-    public int kthSmallest(TreeNode root, int k) {
-        Stack<TreeNode> stack = new Stack();
-        TreeNode node = root;
-        while (true) {
-            while (node != null) {
-                stack.push(node);
-                node = node.left;
-            }
-            TreeNode n = stack.pop();
-            if (--k == 0) return n.val;
-            node = n.right;
-        }
+    public int countNodes(TreeNode root) {
+        if (root == null) return 0;
+        return 1 + countNodes(root.left) + countNodes(root.right);
     }
 }
