@@ -1,29 +1,19 @@
 class Solution {
     public int[][] merge(int[][] intervals) {
-        if (intervals.length == 1) return Arrays.copyOf(intervals, 1);
-        Arrays.sort(intervals, (int[] a, int[] b) -> {
-            if (a[0] != b[0]) return a[0] - b[0];
-            return a[1] - b[1];
-        });
-        int index = 1;
-        ArrayList<int[]> list = new ArrayList();
-        list.add(intervals[0]);
-        while (index < intervals.length) {
-            int[] pre = list.get(list.size() - 1);
-            if (pre[1] < intervals[index][0]) {
-                list.add(intervals[index]);
-            } else if (pre[1] == intervals[index][0]) {
-                pre[1] = intervals[index][1];
-            } else {
-                pre[0] = Math.min(pre[0], intervals[index][0]);
-                pre[1] = Math.max(pre[1], intervals[index][1]);
+        Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
+        LinkedList<int[]> merged = new LinkedList<>();
+        for (int[] interval : intervals) {
+            // if the list of merged intervals is empty or if the current
+            // interval does not overlap with the previous, simply append it.
+            if (merged.isEmpty() || merged.getLast()[1] < interval[0]) {
+                merged.add(interval);
             }
-            index++;
+            // otherwise, there is overlap, so we merge the current and previous
+            // intervals.
+            else {
+                merged.getLast()[1] = Math.max(merged.getLast()[1], interval[1]);
+            }
         }
-        int[][] result = new int[list.size()][2];
-        for (int i = 0; i < list.size(); i++) {
-            result[i] = list.get(i);
-        }
-        return result;
+        return merged.toArray(new int[merged.size()][]);
     }
 }

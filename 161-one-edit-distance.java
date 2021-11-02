@@ -1,6 +1,5 @@
 class Solution {
     public boolean isOneEditDistance(String s, String t) {
-        if (s.equals(t)) return false;
         int i1 = 0;
         int i2 = 0;
         int n1 = s.length();
@@ -32,6 +31,6 @@ class Solution {
                 }
             }
         }
-        return i1 == n1 && i2 == n2;
+        return changed && i1 == n1 && i2 == n2;
     }
 }
